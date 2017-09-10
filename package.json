@@ -1,0 +1,27 @@
+{
+    "name": "aflred",
+    "version": "0.1.0",
+    "description": "Alfred for those of us who can't afford him.",
+    "main": "index.js",
+    "dependencies": {
+        "ghostjs": "^1.13.1"
+    },
+    "devDependencies": {
+        "@types/node": "^8.0.28",
+        "babel-core": "^6.26.0",
+        "babel-plugin-transform-async-to-generator": "^6.24.1",
+        "babel-preset-es2015": "^6.24.1",
+        "babel-preset-stage-0": "^6.24.1",
+        "fuse-box": "^2.2.3",
+        "fuse-test-runner": "^1.0.14",
+        "shelljs": "^0.7.8",
+        "ts-node": "^3.3.0",
+        "tslint": "^5.7.0",
+        "typescript": "^2.5.2"
+    },
+    "scripts": {
+        "fuse": "ts-node fuse.ts"
+    },
+    "author": "",
+    "license": "ISC"
+}
