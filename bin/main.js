@@ -40,21 +40,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 exports.__esModule = true;
-var ghost = require("ghostjs");
+var ghostjs_1 = require("ghostjs");
 exports.message = "Holy smokes";
 var go = function () { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log(ghost);
+                console.log(ghostjs_1["default"]);
                 console.log('done');
-                return [4 /*yield*/, ghost["default"].open('http://www.google.com')];
+                return [4 /*yield*/, ghostjs_1["default"].open('http://www.google.com')];
             case 1:
                 _a.sent();
                 return [2 /*return*/];
         }
     });
 }); };
+go();
 
 });
 });
@@ -176,9 +177,7 @@ var Ghost = /** @class */ (function () {
         };
         // Open the console if we're running slimer, and the GHOST_CONSOLE env var is set.
         if (this.testRunner.match(/slimerjs/) && process.env.GHOST_CONSOLE) {
-            this.setDriverOpts({
-                parameters: ['-jsconsole']
-            });
+            this.setDriverOpts({ parameters: ['-jsconsole'] });
         }
         else if (this.testRunner.match(/chrome/)) {
             var program = spawn(ChromeGhostDriver.path, [], {
@@ -195,9 +194,9 @@ var Ghost = /** @class */ (function () {
      */
     Ghost.prototype.setDriverOpts = function (opts) {
         debug('set driver opts', opts);
-        this.driverOpts = this.testRunner.match(/phantom/) ?
-            opts :
-            {};
+        this.driverOpts = this.testRunner.match(/phantom/)
+            ? opts
+            : {};
         // Don't do anything for chrome here.
         if (this.testRunner.match(/chrome/)) {
             return;
@@ -208,9 +207,7 @@ var Ghost = /** @class */ (function () {
         this.driverOpts.path = require(this.testRunner).path;
         // The dnode `weak` dependency is failing to install on travis.
         // Disable this for now until someone needs it.
-        this.driverOpts.dnodeOpts = {
-            weak: false
-        };
+        this.driverOpts.dnodeOpts = { weak: false };
     };
     /**
      * Adds scripts to be injected to for each page load.
@@ -426,9 +423,7 @@ var Ghost = /** @class */ (function () {
             return __generator(this, function (_a) {
                 debug('getting pageTitle');
                 return [2 /*return*/, new Promise(function (resolve) {
-                        _this.pageContext.evaluate(function () {
-                            return document.title;
-                        }, function (err, result) {
+                        _this.pageContext.evaluate(function () { return document.title; }, function (err, result) {
                             if (err) {
                                 console.error(err);
                             }
@@ -561,10 +556,7 @@ var Ghost = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 debug('resizing to', width, height);
-                this.pageContext.set('viewportSize', {
-                    width: width,
-                    height: height
-                });
+                this.pageContext.set('viewportSize', { width: width, height: height });
                 return [2 /*return*/];
             });
         });
@@ -1216,293 +1208,470 @@ module.exports = { getChromeFlags }
 });
 ___scope___.file("src/chrome/index.js", function(exports, require, module, __filename, __dirname){
 /* fuse:injection: */ var Buffer = require("buffer").Buffer;
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [0, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+var _this = this;
 /* eslint-disable no-new-func */
-const CDP = require('chrome-remote-interface')
-const fs = require('fs')
-const events = require('events')
-const path = require('path')
-
-class ChromePageObject {
-  constructor ({ targetId, viewportSize } = {}) {
-    this.targetId = targetId
-    this.viewportSize = viewportSize || {
-      height: 300,
-      width: 400
+var CDP = require('chrome-remote-interface');
+var fs = require('fs');
+var events = require('events');
+var path = require('path');
+var ChromePageObject = /** @class */ (function () {
+    function ChromePageObject(_a) {
+        var _b = _a === void 0 ? {} : _a, targetId = _b.targetId, viewportSize = _b.viewportSize;
+        this.targetId = targetId;
+        this.viewportSize = viewportSize || {
+            height: 300,
+            width: 400
+        };
+        events.EventEmitter.defaultMaxListeners = Infinity;
     }
-    events.EventEmitter.defaultMaxListeners = Infinity
-  }
-
-  getCDP () {
-    if (this.initialPromise) {
-      return this.initialPromise
-    }
-
-    this.initialPromise = new Promise((resolve) => {
-      if (this._client) {
-        resolve(this._client)
-        return
-      }
-
-      const startRequest = Date.now()
-      let backoffStartupTime = 25
-      const maxStartupTime = 60000
-
-      const initCDP = () => {
-        CDP(async (client) => {
-          this._client = client
-
-          // If we have a targetId, connect to that.
+    ChromePageObject.prototype.getCDP = function () {
+        var _this = this;
+        if (this.initialPromise) {
+            return this.initialPromise;
+        }
+        this.initialPromise = new Promise(function (resolve) {
+            if (_this._client) {
+                resolve(_this._client);
+                return;
+            }
+            var startRequest = Date.now();
+            var backoffStartupTime = 25;
+            var maxStartupTime = 60000;
+            var initCDP = function () {
+                CDP(function (client) { return __awaiter(_this, void 0, void 0, function () {
+                    var Target, e_1;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                this._client = client;
+                                if (!this.targetId) return [3 /*break*/, 4];
+                                Target = client.Target;
+                                _a.label = 1;
+                            case 1:
+                                _a.trys.push([1, 3, , 4]);
+                                return [4 /*yield*/, Target.attachToTarget({ targetId: this.targetId })];
+                            case 2:
+                                _a.sent();
+                                return [3 /*break*/, 4];
+                            case 3:
+                                e_1 = _a.sent();
+                                console.log('Could not attach to target', this.targetId, e_1);
+                                return [3 /*break*/, 4];
+                            case 4:
+                                resolve(client);
+                                return [2 /*return*/];
+                        }
+                    });
+                }); }).on('error', function (err) {
+                    if (Date.now() - startRequest > maxStartupTime) {
+                        console.error('CDP Error: ' + err.stack);
+                    }
+                    else {
+                        backoffStartupTime *= 2;
+                        setTimeout(initCDP, backoffStartupTime);
+                    }
+                });
+            };
+            setTimeout(initCDP, backoffStartupTime);
+        });
+        return this.initialPromise;
+    };
+    ChromePageObject.prototype.open = function (url, cb) {
+        var _this = this;
+        this.getCDP().then(function (client) { return __awaiter(_this, void 0, void 0, function () {
+            var _this = this;
+            var Page, Emulation, Security, Target, Network, deviceMetrics, _a, _b, offline, _c, latency, downloadThroughput, uploadThroughput, canEmulateNetworkConditions, err_1, failMessage;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
+                    case 0:
+                        Page = client.Page, Emulation = client.Emulation, Security = client.Security, Target = client.Target, Network = client.Network;
+                        deviceMetrics = {
+                            width: this.viewportSize.width,
+                            height: this.viewportSize.height,
+                            deviceScaleFactor: 0,
+                            mobile: false,
+                            fitWindow: true
+                        };
+                        _d.label = 1;
+                    case 1:
+                        _d.trys.push([1, 13, , 14]);
+                        Security.certificateError(function (res) {
+                            cb(null, 'fail');
+                        });
+                        return [4 /*yield*/, Target.setDiscoverTargets({ discover: true })];
+                    case 2:
+                        _d.sent();
+                        Target.targetCreated(function (_a) {
+                            var targetInfo = _a.targetInfo;
+                            return __awaiter(_this, void 0, void 0, function () {
+                                var _this = this;
+                                var targetId, subPageObj_1;
+                                return __generator(this, function (_a) {
+                                    if (targetInfo.type === 'page') {
+                                        targetId = targetInfo.targetId;
+                                        subPageObj_1 = new ChromePageObject({ targetId: targetId });
+                                        subPageObj_1.evaluate(function () { return window.location.toString(); }, function (err, targetLocation) {
+                                            if (err) {
+                                                console.log(err);
+                                            }
+                                            _this.onPageCreated(subPageObj_1);
+                                            subPageObj_1.onUrlChanged(targetLocation);
+                                        });
+                                    }
+                                    return [2 /*return*/];
+                                });
+                            });
+                        });
+                        return [4 /*yield*/, Page.enable()];
+                    case 3:
+                        _d.sent();
+                        return [4 /*yield*/, Security.enable()];
+                    case 4:
+                        _d.sent();
+                        return [4 /*yield*/, Network.enable()];
+                    case 5:
+                        _d.sent();
+                        if (!this.networkOptions) return [3 /*break*/, 9];
+                        _a = this.networkOptions, _b = _a.offline, offline = _b === void 0 ? false : _b, _c = _a.latency, latency = _c === void 0 ? 0 : _c, downloadThroughput = _a.downloadThroughput, uploadThroughput = _a.uploadThroughput;
+                        return [4 /*yield*/, Network.canEmulateNetworkConditions()];
+                    case 6:
+                        canEmulateNetworkConditions = _d.sent();
+                        if (!canEmulateNetworkConditions) return [3 /*break*/, 8];
+                        return [4 /*yield*/, Network.emulateNetworkConditions({
+                                offline: offline,
+                                latency: latency,
+                                downloadThroughput: downloadThroughput,
+                                uploadThroughput: uploadThroughput
+                            })];
+                    case 7:
+                        _d.sent();
+                        return [3 /*break*/, 9];
+                    case 8:
+                        console.warn('Unable to emulate network conditions in Chrome');
+                        _d.label = 9;
+                    case 9: return [4 /*yield*/, Emulation.setDeviceMetricsOverride(deviceMetrics)];
+                    case 10:
+                        _d.sent();
+                        return [4 /*yield*/, Page.navigate({ url: url })];
+                    case 11:
+                        _d.sent();
+                        return [4 /*yield*/, Page.loadEventFired(function () {
+                                cb(null, url);
+                            })];
+                    case 12:
+                        _d.sent();
+                        return [3 /*break*/, 14];
+                    case 13:
+                        err_1 = _d.sent();
+                        console.error(err_1.stack);
+                        failMessage = 'fail';
+                        cb(failMessage, null);
+                        return [3 /*break*/, 14];
+                    case 14: return [2 /*return*/];
+                }
+            });
+        }); });
+    };
+    ChromePageObject.prototype.render = function (filePath) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                this.getCDP().then(function (client) { return __awaiter(_this, void 0, void 0, function () {
+                    var Page, data, err_2;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                Page = client.Page;
+                                _a.label = 1;
+                            case 1:
+                                _a.trys.push([1, 3, , 4]);
+                                return [4 /*yield*/, Page.captureScreenshot()];
+                            case 2:
+                                data = (_a.sent()).data;
+                                fs.writeFileSync(filePath, Buffer.from(data, 'base64'));
+                                return [3 /*break*/, 4];
+                            case 3:
+                                err_2 = _a.sent();
+                                console.error(err_2);
+                                return [3 /*break*/, 4];
+                            case 4: return [2 /*return*/];
+                        }
+                    });
+                }); });
+                return [2 /*return*/];
+            });
+        });
+    };
+    ChromePageObject.prototype.evaluate = function (fn) {
+        var _this = this;
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        this.getCDP().then(function (client) { return __awaiter(_this, void 0, void 0, function () {
+            var Runtime, cb, executor, executorString, result, value, err_3, cb;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        Runtime = client.Runtime;
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 4, , 5]);
+                        cb = args.pop();
+                        executor = function (stringyFunc, args) {
+                            var invoke = new Function('return ' + stringyFunc)();
+                            return invoke.apply(null, args);
+                        };
+                        executorString = "(" + executor + ")(" + fn.toString() + ", " + JSON.stringify(args) + ")";
+                        return [4 /*yield*/, Runtime.enable()];
+                    case 2:
+                        _a.sent();
+                        return [4 /*yield*/, Runtime.evaluate({ expression: executorString, returnByValue: true })];
+                    case 3:
+                        result = (_a.sent()).result;
+                        value = result.value;
+                        cb(null, value);
+                        return [3 /*break*/, 5];
+                    case 4:
+                        err_3 = _a.sent();
+                        console.log(err_3.stack);
+                        cb = args.pop();
+                        cb(err_3, null);
+                        console.error(err_3);
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        }); });
+    };
+    ChromePageObject.prototype.goForward = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                this.getCDP().then(function (client) { return __awaiter(_this, void 0, void 0, function () {
+                    var Page, _a, currentIndex, entries, err_4;
+                    return __generator(this, function (_b) {
+                        switch (_b.label) {
+                            case 0:
+                                Page = client.Page;
+                                _b.label = 1;
+                            case 1:
+                                _b.trys.push([1, 7, , 8]);
+                                return [4 /*yield*/, Page.enable()];
+                            case 2:
+                                _b.sent();
+                                return [4 /*yield*/, Page.getNavigationHistory()];
+                            case 3:
+                                _a = _b.sent(), currentIndex = _a.currentIndex, entries = _a.entries;
+                                if (!(currentIndex === entries.length - 1)) return [3 /*break*/, 4];
+                                return [2 /*return*/];
+                            case 4: return [4 /*yield*/, Page.navigateToHistoryEntry({ entryId: entries[currentIndex + 1].id })];
+                            case 5:
+                                _b.sent();
+                                _b.label = 6;
+                            case 6: return [3 /*break*/, 8];
+                            case 7:
+                                err_4 = _b.sent();
+                                console.error(err_4);
+                                return [3 /*break*/, 8];
+                            case 8: return [2 /*return*/];
+                        }
+                    });
+                }); });
+                return [2 /*return*/];
+            });
+        });
+    };
+    ChromePageObject.prototype.goBack = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                this.getCDP().then(function (client) { return __awaiter(_this, void 0, void 0, function () {
+                    var Page, _a, currentIndex, entries, err_5;
+                    return __generator(this, function (_b) {
+                        switch (_b.label) {
+                            case 0:
+                                Page = client.Page;
+                                _b.label = 1;
+                            case 1:
+                                _b.trys.push([1, 7, , 8]);
+                                return [4 /*yield*/, Page.enable()];
+                            case 2:
+                                _b.sent();
+                                return [4 /*yield*/, Page.getNavigationHistory()];
+                            case 3:
+                                _a = _b.sent(), currentIndex = _a.currentIndex, entries = _a.entries;
+                                if (!(currentIndex === 0)) return [3 /*break*/, 4];
+                                return [2 /*return*/];
+                            case 4: return [4 /*yield*/, Page.navigateToHistoryEntry({ entryId: entries[currentIndex - 1].id })];
+                            case 5:
+                                _b.sent();
+                                _b.label = 6;
+                            case 6: return [3 /*break*/, 8];
+                            case 7:
+                                err_5 = _b.sent();
+                                console.error(err_5);
+                                return [3 /*break*/, 8];
+                            case 8: return [2 /*return*/];
+                        }
+                    });
+                }); });
+                return [2 /*return*/];
+            });
+        });
+    };
+    ChromePageObject.prototype.injectJs = function (scriptPath) {
+        return __awaiter(this, void 0, void 0, function () {
+            var js, Runtime, expression, err_6;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        js = fs.readFileSync(scriptPath, { encoding: 'utf8' }).trim();
+                        Runtime = this._client.Runtime;
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        expression = "(()=>{" + js + "})()";
+                        return [4 /*yield*/, Runtime.evaluate({ expression: expression })];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_6 = _a.sent();
+                        console.error(err_6);
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ChromePageObject.prototype.close = function () {
+        // Close is currently broken in chrome. Use await ghost.exit instead.
+        /*
+        this.getCDP().then(async (client) => {
           if (this.targetId) {
             const { Target } = client
-            try {
-              await Target.attachToTarget({ targetId: this.targetId })
-            } catch (e) {
-              console.log('Could not attach to target', this.targetId, e)
-            }
+            Target.detachFromTarget({ targetId: this.targetId })
           }
-
-          resolve(client)
-        }).on('error', (err) => {
-          if (Date.now() - startRequest > maxStartupTime) {
-            console.error('CDP Error: ' + err.stack)
-          } else {
-            backoffStartupTime *= 2
-            setTimeout(initCDP, backoffStartupTime)
-          }
+          await client.close()
         })
-      }
-      setTimeout(initCDP, backoffStartupTime)
-    })
-
-    return this.initialPromise
-  }
-
-  open (url, cb) {
-    this.getCDP().then(async (client) => {
-      const { Page, Emulation, Security, Target, Network } = client
-      const deviceMetrics = {
-        width: this.viewportSize.width,
-        height: this.viewportSize.height,
-        deviceScaleFactor: 0,
-        mobile: false,
-        fitWindow: true
-      }
-
-      try {
-        Security.certificateError((res) => {
-          cb(null, 'fail')
-        })
-
-        await Target.setDiscoverTargets({ discover: true })
-
-        Target.targetCreated(async ({ targetInfo }) => {
-          if (targetInfo.type === 'page') {
-            const { targetId } = targetInfo
-
-            // TODO: Handle the rest of the phantom childPage contract used in ghost.
-            const subPageObj = new ChromePageObject({ targetId })
-            subPageObj.evaluate(() => window.location.toString(), (err, targetLocation) => {
-              if (err) {
-                console.log(err)
-              }
-              this.onPageCreated(subPageObj)
-              subPageObj.onUrlChanged(targetLocation)
-            })
-          }
-        })
-
-        await Page.enable()
-        await Security.enable()
-        await Network.enable()
-
-        if (this.networkOptions) {
-          const {
-            offline = false,
-            latency = 0,
-            downloadThroughput,
-            uploadThroughput
-          } = this.networkOptions
-
-          const canEmulateNetworkConditions = await Network.canEmulateNetworkConditions()
-
-          if (canEmulateNetworkConditions) {
-            await Network.emulateNetworkConditions({
-              offline: offline,
-              latency: latency,
-              downloadThroughput: downloadThroughput,
-              uploadThroughput: uploadThroughput
-            })
-          } else {
-            console.warn('Unable to emulate network conditions in Chrome')
-          }
-        }
-
-        await Emulation.setDeviceMetricsOverride(deviceMetrics)
-        await Page.navigate({url: url})
-        await Page.loadEventFired(() => {
-          cb(null, url)
-        })
-      } catch (err) {
-        console.error(err.stack)
-        const failMessage = 'fail'
-        cb(failMessage, null)
-      }
-    })
-  }
-
-  async render (filePath) {
-    this.getCDP().then(async (client) => {
-      const { Page } = client
-      try {
-        const { data } = await Page.captureScreenshot()
-        fs.writeFileSync(filePath, Buffer.from(data, 'base64'))
-      } catch (err) {
-        console.error(err)
-      }
-    })
-  }
-
-  evaluate (fn, ...args) {
-    this.getCDP().then(async (client) => {
-      const { Runtime } = client
-      try {
-        const cb = args.pop()
-        let executor = (stringyFunc, args) => {
-          let invoke = new Function(
-            'return ' + stringyFunc
-          )()
-          return invoke.apply(null, args)
-        }
-        let executorString = `(${executor})(${fn.toString()}, ${JSON.stringify(args)})`
-        await Runtime.enable()
-        const { result } = await Runtime.evaluate({expression: executorString, returnByValue: true})
-        const value = result.value
-        cb(null, value)
-      } catch (err) {
-        console.log(err.stack)
-        const cb = args.pop()
-        cb(err, null)
-        console.error(err)
-      }
-    })
-  }
-
-  async goForward () {
-    this.getCDP().then(async (client) => {
-      const { Page } = client
-      try {
-        await Page.enable()
-        let {currentIndex, entries} = await Page.getNavigationHistory()
-        if (currentIndex === entries.length - 1) {
-          return
-        } else {
-          await Page.navigateToHistoryEntry({ entryId: entries[currentIndex + 1].id })
-        }
-      } catch (err) {
-        console.error(err)
-      }
-    })
-  }
-
-  async goBack () {
-    this.getCDP().then(async (client) => {
-      const { Page } = client
-      try {
-        await Page.enable()
-        let {currentIndex, entries} = await Page.getNavigationHistory()
-        if (currentIndex === 0) {
-          return
-        } else {
-          await Page.navigateToHistoryEntry({ entryId: entries[currentIndex - 1].id })
-        }
-      } catch (err) {
-        console.error(err)
-      }
-    })
-  }
-
-  async injectJs (scriptPath) {
-    const js = fs.readFileSync(scriptPath, {encoding: 'utf8'}).trim()
-    const { Runtime } = this._client
-    try {
-      let expression = `(()=>{${js}})()`
-      await Runtime.evaluate({ expression: expression })
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  close () {
-    // Close is currently broken in chrome. Use await ghost.exit instead.
-    /*
-    this.getCDP().then(async (client) => {
-      if (this.targetId) {
-        const { Target } = client
-        Target.detachFromTarget({ targetId: this.targetId })
-      }
-      await client.close()
-    })
-    */
-  }
-
-  async closeAll () {
-    this.getCDP().then(async (client) => {
-      const { Target } = client
-      const targets = await Target.getTargets()
-      console.log('targets.targetInfos', targets.targetInfos)
-      targets.targetInfos.forEach(target => {
-        if (target.type === 'page') {
-          Target.closeTarget({ targetId: target.targetId })
-        }
-      })
-    })
-  }
-
-  set (param, options) {
-    this.getCDP().then(async (client) => {
-      if (param === 'viewportSize') {
-        const { width, height } = options
-        const { Emulation } = client
-
-        this.viewportSize = {
-          width,
-          height
-        }
-
-        const deviceMetrics = {
-          width: width,
-          height: height,
-          deviceScaleFactor: 0,
-          mobile: false,
-          fitWindow: true
-        }
-
-        Emulation.setDeviceMetricsOverride(deviceMetrics)
-      } else if (param === 'networkOption') {
-        this.networkOptions = options
-      } else {
-        console.warn(`${param} currently not supported for Chrome.`)
-      }
-    })
-  }
-}
-
-ChromePageObject.create = (options, callback) => {
-  const pageObj = new ChromePageObject()
-
-  callback(null, {
-    createPage: (pageCb) => {
-      pageCb(null, pageObj)
-    },
-    exit: async () => {
-      await pageObj.closeAll()
-    }
-  })
-}
-
-ChromePageObject.path = path.join(__dirname, '/binary')
-
-module.exports = ChromePageObject
+        */
+    };
+    ChromePageObject.prototype.closeAll = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                this.getCDP().then(function (client) { return __awaiter(_this, void 0, void 0, function () {
+                    var Target, targets;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                Target = client.Target;
+                                return [4 /*yield*/, Target.getTargets()];
+                            case 1:
+                                targets = _a.sent();
+                                console.log('targets.targetInfos', targets.targetInfos);
+                                targets.targetInfos.forEach(function (target) {
+                                    if (target.type === 'page') {
+                                        Target.closeTarget({ targetId: target.targetId });
+                                    }
+                                });
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
+                return [2 /*return*/];
+            });
+        });
+    };
+    ChromePageObject.prototype.set = function (param, options) {
+        var _this = this;
+        this.getCDP().then(function (client) { return __awaiter(_this, void 0, void 0, function () {
+            var width, height, Emulation, deviceMetrics;
+            return __generator(this, function (_a) {
+                if (param === 'viewportSize') {
+                    width = options.width, height = options.height;
+                    Emulation = client.Emulation;
+                    this.viewportSize = {
+                        width: width,
+                        height: height
+                    };
+                    deviceMetrics = {
+                        width: width,
+                        height: height,
+                        deviceScaleFactor: 0,
+                        mobile: false,
+                        fitWindow: true
+                    };
+                    Emulation.setDeviceMetricsOverride(deviceMetrics);
+                }
+                else if (param === 'networkOption') {
+                    this.networkOptions = options;
+                }
+                else {
+                    console.warn(param + " currently not supported for Chrome.");
+                }
+                return [2 /*return*/];
+            });
+        }); });
+    };
+    return ChromePageObject;
+}());
+ChromePageObject.create = function (options, callback) {
+    var pageObj = new ChromePageObject();
+    callback(null, {
+        createPage: function (pageCb) {
+            pageCb(null, pageObj);
+        },
+        exit: function () { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, pageObj.closeAll()];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        }); }
+    });
+};
+ChromePageObject.path = path.join(__dirname, '/binary');
+module.exports = ChromePageObject;
 
 });
 return ___scope___.entry = "src/ghostjs.js";
@@ -23080,6 +23249,9 @@ FuseBox.global("__generator", function(thisArg, body) {
 });
 
 FuseBox.target = "universal"
+
+FuseBox.import("default/main.js");
+FuseBox.main("default/main.js");
 })
 ((function(__root__){
 if (__root__["FuseBox"]) return __root__["FuseBox"];

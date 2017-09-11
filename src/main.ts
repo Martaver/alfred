@@ -7,3 +7,5 @@ const go = async () => {
     console.log('done');
     await ghost.open('http://www.google.com');
 }
+
+go();
