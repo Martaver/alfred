@@ -1,4 +1,5 @@
-import { Sparky, FuseBox, TypeScriptHelpers, BabelPlugin } from "fuse-box";
+import { Sparky, FuseBox, CopyPlugin } from "fuse-box";
+import * as fs from "fs";
 
 
 const fuse = FuseBox.init({
@@ -6,11 +7,12 @@ const fuse = FuseBox.init({
     output: 'bin/$name.js',
     debug: true,
     plugins: [
-        TypeScriptHelpers()
+
     ]
 })
 
 Sparky.task("default", () => {
+
 
     fuse
         .bundle('main')

@@ -4,9 +4,11 @@
     "description": "Alfred for those of us who can't afford him.",
     "main": "index.js",
     "dependencies": {
-        "ghostjs": "^1.13.1"
+        "chromeless": "^1.3.0",
+        "cheerio": "^1.0.0-rc.2"
     },
     "devDependencies": {
+        "@types/cheerio": "^0.22.3",
         "@types/node": "^8.0.28",
         "fuse-box": "2.3.1-beta.5",
         "fuse-test-runner": "^1.0.14",
@@ -16,6 +18,7 @@
         "typescript": "^2.5.2"
     },
     "scripts": {
+        "main": "ts-node src/main.ts",
         "fuse": "ts-node fuse.ts"
     },
     "author": "",
